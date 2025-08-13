@@ -1,5 +1,5 @@
 // app/products/[slug]/page.tsx
-import { getProduct, getProductReviews } from '@/lib/cosmic'
+import { getProduct, getProductReviews, getAllProducts } from '@/lib/cosmic'
 import { notFound } from 'next/navigation'
 import ProductDetails from '@/components/ProductDetails'
 import ProductReviews from '@/components/ProductReviews'
@@ -26,16 +26,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
     ? reviews.reduce((sum, review) => sum + parseInt(review.metadata.rating.key), 0) / reviews.length
     : 0
 
-  const productWithReviews = {
-    ...product,
-    reviews,
-    averageRating,
-    reviewCount: reviews.length
-  }
-
   return (
     <div className="container-custom py-8">
-      <ProductDetails product={productWithReviews} />
+      <ProductDetails product={product} />
       
       <div className="mt-16">
         <ProductReviews reviews={reviews} averageRating={averageRating} />

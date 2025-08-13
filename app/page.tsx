@@ -1,13 +1,14 @@
-import { getAllProducts, getAllCollections } from '@/lib/cosmic'
+import { getAllProducts, getAllCollections, getAllReviews } from '@/lib/cosmic'
 import Hero from '@/components/Hero'
 import ProductGrid from '@/components/ProductGrid'
 import CollectionShowcase from '@/components/CollectionShowcase'
 import FeaturedReviews from '@/components/FeaturedReviews'
 
 export default async function HomePage() {
-  const [products, collections] = await Promise.all([
+  const [products, collections, reviews] = await Promise.all([
     getAllProducts(),
-    getAllCollections()
+    getAllCollections(),
+    getAllReviews().catch(() => [])
   ])
 
   const featuredProducts = products.slice(0, 6)
@@ -30,7 +31,7 @@ export default async function HomePage() {
 
       <CollectionShowcase collections={collections} />
       
-      <FeaturedReviews />
+      <FeaturedReviews reviews={reviews} />
     </div>
   )
 }

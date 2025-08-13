@@ -24,7 +24,7 @@ function StarRating({ rating }: { rating: number }) {
 }
 
 export default function FeaturedReviews({ reviews }: FeaturedReviewsProps) {
-  if (!reviews.length) {
+  if (!reviews?.length) {
     return null
   }
 

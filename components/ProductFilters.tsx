@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { Collection } from '@/types'
+import { Collection, Product } from '@/types'
 
 interface ProductFiltersProps {
-  collections: Collection[]
-  onFilterChange: (filters: FilterState) => void
-  productCount: number
+  products: Product[]
+  collections?: Collection[]
+  onFilterChange?: (filters: FilterState) => void
 }
 
 interface FilterState {
@@ -18,9 +18,9 @@ interface FilterState {
 }
 
 export default function ProductFilters({ 
-  collections, 
-  onFilterChange, 
-  productCount 
+  products, 
+  collections = [], 
+  onFilterChange 
 }: ProductFiltersProps) {
   const [filters, setFilters] = useState<FilterState>({})
   const [isOpen, setIsOpen] = useState(false)
@@ -28,13 +28,13 @@ export default function ProductFilters({
   const updateFilters = (newFilters: Partial<FilterState>) => {
     const updatedFilters = { ...filters, ...newFilters }
     setFilters(updatedFilters)
-    onFilterChange(updatedFilters)
+    onFilterChange?.(updatedFilters)
   }
 
   const clearFilters = () => {
     const clearedFilters: FilterState = {}
     setFilters(clearedFilters)
-    onFilterChange(clearedFilters)
+    onFilterChange?.(clearedFilters)
   }
 
   const hasActiveFilters = Object.keys(filters).some(key => 
@@ -70,7 +70,7 @@ export default function ProductFilters({
       <div className={`space-y-6 ${isOpen ? 'block' : 'hidden lg:block'}`}>
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-gray-900">
-            Filters ({productCount} products)
+            Filters ({products.length} products)
           </h3>
           {hasActiveFilters && (
             <button
@@ -83,35 +83,37 @@ export default function ProductFilters({
         </div>
 
         {/* Collection Filter */}
-        <div className="space-y-2">
-          <h4 className="font-medium text-gray-900">Collection</h4>
-          <div className="space-y-1">
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="collection"
-                checked={!filters.collection}
-                onChange={() => updateFilters({ collection: undefined })}
-                className="text-primary"
-              />
-              <span className="text-sm text-gray-700">All Collections</span>
-            </label>
-            {collections.map((collection) => (
-              <label key={collection.id} className="flex items-center gap-2">
+        {collections.length > 0 && (
+          <div className="space-y-2">
+            <h4 className="font-medium text-gray-900">Collection</h4>
+            <div className="space-y-1">
+              <label className="flex items-center gap-2">
                 <input
                   type="radio"
                   name="collection"
-                  checked={filters.collection === collection.id}
-                  onChange={() => updateFilters({ collection: collection.id })}
+                  checked={!filters.collection}
+                  onChange={() => updateFilters({ collection: undefined })}
                   className="text-primary"
                 />
-                <span className="text-sm text-gray-700">
-                  {collection.metadata.name}
-                </span>
+                <span className="text-sm text-gray-700">All Collections</span>
               </label>
-            ))}
+              {collections.map((collection) => (
+                <label key={collection.id} className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="collection"
+                    checked={filters.collection === collection.id}
+                    onChange={() => updateFilters({ collection: collection.id })}
+                    className="text-primary"
+                  />
+                  <span className="text-sm text-gray-700">
+                    {collection.metadata.name}
+                  </span>
+                </label>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Stock Filter */}
         <div className="space-y-2">

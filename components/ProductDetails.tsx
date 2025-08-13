@@ -5,14 +5,17 @@ interface ProductDetailsProps {
 }
 
 export default function ProductDetails({ product }: ProductDetailsProps) {
+  const firstImage = product.metadata.images?.[0]
+  const remainingImages = product.metadata.images?.slice(1, 5) || []
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
       {/* Product Images */}
       <div className="space-y-4">
-        {product.metadata.images && product.metadata.images.length > 0 ? (
+        {firstImage ? (
           <div className="aspect-square overflow-hidden rounded-lg">
             <img
-              src={`${product.metadata.images[0].imgix_url}?w=800&h=800&fit=crop&auto=format,compress`}
+              src={`${firstImage.imgix_url}?w=800&h=800&fit=crop&auto=format,compress`}
               alt={product.metadata.name}
               className="w-full h-full object-cover"
               width={800}
@@ -25,9 +28,9 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           </div>
         )}
         
-        {product.metadata.images && product.metadata.images.length > 1 && (
+        {remainingImages.length > 0 && (
           <div className="grid grid-cols-4 gap-2">
-            {product.metadata.images.slice(1, 5).map((image, index) => (
+            {remainingImages.map((image, index) => (
               <div key={index} className="aspect-square overflow-hidden rounded">
                 <img
                   src={`${image.imgix_url}?w=200&h=200&fit=crop&auto=format,compress`}

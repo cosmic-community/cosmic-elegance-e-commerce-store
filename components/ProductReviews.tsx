@@ -2,7 +2,7 @@ import { Review } from '@/types'
 
 interface ProductReviewsProps {
   reviews: Review[]
-  productId: string
+  averageRating: number
 }
 
 function StarRating({ rating }: { rating: number }) {
@@ -24,18 +24,8 @@ function StarRating({ rating }: { rating: number }) {
   )
 }
 
-export default function ProductReviews({ reviews, productId }: ProductReviewsProps) {
-  const productReviews = reviews.filter(review => 
-    review.metadata.product.id === productId
-  )
-
-  const averageRating = productReviews.length > 0
-    ? productReviews.reduce((sum, review) => 
-        sum + parseInt(review.metadata.rating.key), 0
-      ) / productReviews.length
-    : 0
-
-  if (!productReviews.length) {
+export default function ProductReviews({ reviews, averageRating }: ProductReviewsProps) {
+  if (!reviews.length) {
     return (
       <div className="card">
         <div className="p-6 text-center">
@@ -64,14 +54,14 @@ export default function ProductReviews({ reviews, productId }: ProductReviewsPro
               </span>
             </div>
             <span className="text-sm text-gray-500">
-              ({productReviews.length} review{productReviews.length !== 1 ? 's' : ''})
+              ({reviews.length} review{reviews.length !== 1 ? 's' : ''})
             </span>
           </div>
         </div>
       </div>
       
       <div className="space-y-4">
-        {productReviews.map((review) => (
+        {reviews.map((review) => (
           <div key={review.id} className="card">
             <div className="p-6">
               <div className="flex items-start justify-between mb-4">
