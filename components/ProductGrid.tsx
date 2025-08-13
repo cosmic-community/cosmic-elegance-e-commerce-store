@@ -62,7 +62,7 @@ export default function ProductGrid({ products }: ProductGridProps) {
             {product.metadata.collection && (
               <div className="mt-2">
                 <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                  {product.metadata.collection.metadata.name}
+                  {product.metadata.collection.metadata?.name}
                 </span>
               </div>
             )}
